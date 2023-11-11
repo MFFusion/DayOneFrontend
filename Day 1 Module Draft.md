@@ -450,8 +450,151 @@ const router = createRouter({
 })
 createApp(App).use(router).mount('#app')
 ```
+In our App.vue, we need to add a router-view component. This is where our components will be rendered. Open *App.vue* and add this code
+```html
+<template>
+  <div>
+    <router-view />
+  </div>
+</template>
+```
 
+And now our routing works. To change the page, we need to add a router-link component. Open *Home.vue* and add this code
+```html
+<template>
+  <div>
+    <router-link to="/about">About</router-link>
+  </div>
+</template>
+```
+This is a link to the about page. When the user clicks on the link, the page will change to the about page. We also need to add a router-view component to the about page. Open *About.vue* and add this code
+```html
+<template>
+  <div>
+    <h1>About Page</h1>
+  </div>
+</template>
+```
+This is a simple about page. You can add more pages to your application by creating a new component and adding it to the routes array in *main.js*.
 
+### What are navigation guards?
+
+This is a work in progress. We'll add it soon
+
+## Making API Requests with Fetch API
+
+### What is the Fetch API?
+
+The Fetch API provides an interface for fetching resources (including across the network). It is a more powerful and flexible replacement for XMLHttpRequest.
+During ancient times, we used XMLHttpRequest to make API requests. It was a tedious and time-consuming process.
+
+This was how we used it.
+```javascript
+var request = new XMLHttpRequest()
+request.open('GET', 'https://api.github.com/users', true)
+request.onload = function () {
+  // Begin accessing JSON data here
+  var data = JSON.parse(this.response)
+  if (request.status >= 200 && request.status < 400) {
+    data.forEach((user) => {
+      console.log(user.login)
+    })
+  } else {
+    console.log('error')
+  }
+}
+request.send()
+```
+Although, this problem was somewhat remedied by the introduction of jQuery. jQuery made it easier to make API requests, but it was still tedious and time-consuming.
+```javascript
+$.ajax({
+  url: 'https://api.github.com/users',
+  dataType: 'json',
+  success: function(data) {
+    data.forEach((user) => {
+      console.log(user.login)
+    })
+  }
+});
+```
+The difference between the two is that jQuery is a library, while the Fetch API is a browser API. This means that the Fetch API is built into the browser, while jQuery is not. This is why we need to install jQuery before we can use it.
+This is how we use the Fetch API.
+```javascript
+fetch('https://api.github.com/users')
+  .then(response => response.json())
+  .then(data => {
+    data.forEach((user) => {
+      console.log(user.login)
+    })
+  })
+  .catch(err => console.log(err))
+```
+
+See the difference? The Fetch API is much easier to use than XMLHttpRequest. This is why we will be using the Fetch API for this workshop.
+
+### Use the Fetch API to make API requests
+
+Let's take a look at how we can use the Fetch API to make API requests. Open *Home.vue* and add this code
+```javascript
+<script setup>
+import { ref } from 'vue'
+let users = ref([])
+fetch('https://api.github.com/users')
+  .then(response => response.json())
+  .then(data => {
+    users.value = data
+  })
+  .catch(err => console.log(err))
+</script>
+<template>
+  <div>
+    <ul>
+      <li v-for="user in users">{{ user.login }}</li>
+    </ul>
+  </div>
+</template>
+```
+This is a list of users that is fetched from the GitHub API.
+Fetch API will be used to make API requests in this workshop. Especially after we built our Go RESTFul API.
+
+### POST Requests with Fetch API
+
+We can also use the Fetch API to make POST requests. Let's take a look at how we can do that. Open *Home.vue* and add this code
+```javascript
+<script setup>
+import { ref } from 'vue'
+let users = ref([])
+let username = ref("")
+function addUser() {
+  fetch('https://api.github.com/users', {
+    method: 'POST',
+    body: JSON.stringify({
+      username: username.value
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      users.value.push(json)
+    })
+}
+
+</script>
+<template>
+  <div>
+    <input type="text" v-model="username" />
+    <button @click="addUser">Add User</button>
+    <ul>
+      <li v-for="user in users">{{ user.login }}</li>
+    </ul>
+  </div>
+</template>
+
+```
+
+Although this probably wouldn't work, as the GitHub API requires authentication. But you get the idea :).
 
 
 
