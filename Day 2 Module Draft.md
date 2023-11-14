@@ -34,7 +34,18 @@ Certainly! Let's expand on the Day 2 Golang learning module, including more deta
     - Create endpoints for CRUD operations on resources.
     - Demonstrate handling different HTTP methods and response codes.
 
+#### 1.4 Database Interaction with SQLite
+- **Explanation:**
 
+  - Introduce the concept of database interaction in Go.
+  - Focus on SQLite as a lightweight embedded database.
+  - Discuss basic CRUD operations and database/sql package in Go.
+
+- **Activities**:
+
+  - Connect a Go application to an SQLite database.
+  - Perform CRUD operations using the database/sql package.
+  - Integrate database interactions into the RESTful API developed using the Chi router.
 ### General Tips for Day 2 Facilitation:
 
 - **Hands-On Exercises:** Continue incorporating hands-on exercises for each learning outcome to reinforce theoretical knowledge.
@@ -301,4 +312,200 @@ The response given to the client should be like this :
 }
 ```
 
+## 1.4 Database Interaction with SQLite
 
+### Introduce the concept of database interaction in Go
+
+#### What is a database?
+
+A database is a collection of data that is organized in a way that makes it easy to access, manage, and update. There are many different types of databases, such as relational databases, document databases, and graph databases. In this module, we will learn how to interact with a relational database in Go.
+
+#### What is a relational database?
+
+[//]: # (explain about relational database then RDBMS then SQLite as a RDBMS)
+
+Relational databases are databases that store data in tables. Each table has a name and a set of columns. Each column has a name and a data type. Each row in a table represents a record, and each record has a value for each column. For example, a table called users might have columns for name, age, and email address. Each row in the table represents a user, and each user has a name, age, and email address.
+
+A relational database management system (RDBMS) is a software that manages relational databases. The RDBMS is responsible for creating, updating, and deleting data in the database. The RDBMS also provides a way to query the database, which is a way to retrieve data from the database.
+
+An example of an RDBMS is SQLite. SQLite is a lightweight embedded database that is used in many applications, such as web browsers and mobile apps. SQLite is a serverless database, which means that it does not require a server to run. SQLite is also a file-based database, which means that it stores data in a file on the disk.
+
+#### What is the database/sql package?
+
+The database/sql package is a Go package that provides a generic interface for interacting with relational databases. The database/sql package provides functions for connecting to a database, executing queries, and retrieving results. The database/sql package is used by many other Go packages, such as the SQLite driver.
+
+#### What is a database driver?
+
+A database driver is a software that allows an application to interact with a database. The database driver is responsible for connecting to the database, executing queries, and retrieving results. The database driver is often called a database/sql driver because it implements the database/sql interface.
+
+#### What is a database connection?
+
+A database connection is a connection between an application and a database. The database connection is used to execute queries and retrieve results. The database connection is often called a database/sql connection because it implements the database/sql interface.
+
+In order for us to retrieve data in a database, we need to connect to the database. We can connect to a database using the database/sql package. The database/sql package provides a function called Open that takes two parameters: the name of the driver and the data source name. The name of the driver is the name of the database driver, and the data source name is the connection string for the database.
+
+```go
+
+package main
+
+import (
+    "database/sql"
+    "fmt"
+
+    _ "github.com/mattn/go-sqlite3"
+)
+
+func main() {
+    db, err := sql.Open("sqlite3", "test.db")
+    if err != nil {
+        panic(err)
+    }
+    defer db.Close()
+
+    fmt.Println("Successfully connected to database!")
+}
+```
+
+The first parameter is the name of the driver, which is sqlite3 in this case. The second parameter is the data source name, which is test.db in this case. The data source name is a connection string that contains information about the database, such as the database name and the database file path.
+
+The Open function returns a database/sql connection, which is used to execute queries and retrieve results. The database/sql connection is often called a database/sql connection because it implements the database/sql interface.
+
+RDBMS such as MySQL or PostgreSQL is communicated via TCP/IP. However, SQLite is a file-based database, which means that it stores data in a file on the disk. Therefore, we need to specify the database file path in the data source name.
+
+At a low-level, the library will open the file and read the data from it. The library will then parse the data and return it to us in a format that we can use.
+
+Whereas MySQL for example, the library needs to open a TCP connection to the database server, send the query to the server, and wait for the server to respond. The server will then send the results back to the library, which will then parse the results and return them to us in a format that we can use.
+
+If the client and server are on the same machine, the results will be returned almost instantly. However, if the client and server are on different machines, the results will take longer to return.
+
+The easiness of SQLite is that we don't need to install any database server. We just need to install the SQLite library and we can start using it right away.
+
+### Creating a database and table
+
+There are 3 ways that we can come up to create a SQLite database and table.
+We can either use a software called DB Browser for SQLite, or we can use the command line, or we can use the Go code.
+
+#### DB Browser Method
+
+DB Browser for SQLite is a free and open-source software that allows us to create and manage SQLite databases. We can download DB Browser for SQLite from the official website.
+
+After installing DB Browser for SQLite, we can create a new database by clicking on the New Database button. We can then create a new table by clicking on the New Table button. We can then add columns to the table by clicking on the Add Field button. We can then add rows to the table by clicking on the Add Record button.
+
+#### Command Line Method
+
+We can also create a SQLite database and table using the command line. We can create a new database by running the following command in the terminal:
+
+```bash
+sqlite3 test.db
+```
+Afterwards, to create a table, we can run the following command in the terminal:
+
+```bash
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL
+);
+```
+We can then add rows to the table by running the following command in the terminal:
+
+```bash
+INSERT INTO users (name, age) VALUES ("John Doe", 30);
+```
+We can then retrieve the rows from the table by running the following command in the terminal:
+
+```bash
+SELECT * FROM users;
+```
+
+#### Go Method
+
+We can also create a SQLite database and table using Go. We can create a new database by running the following code:
+
+```go
+package main
+
+import (
+    "database/sql"
+    "fmt"
+
+    _ "github.com/mattn/go-sqlite3"
+)
+
+func main() {
+    db, err := sql.Open("sqlite3", "test.db")
+    if err != nil {
+        panic(err)
+    }
+    defer db.Close()
+
+    _, err = db.Exec(`
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            age INTEGER NOT NULL
+        );
+    `)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println("Successfully created users table!")
+}
+```
+
+The Go method can be particularly useful if you want to create scripts that can be run on different machines. For example, if you want to create a script that can be run on a server, you can use the Go method to create the database and table.
+
+### Database Schema
+
+Database schema is the structure of a database. It defines the tables, columns, and relationships between tables. The database schema is often called the database schema because it defines the structure of the database.
+
+
+#### Extracting the schema
+To extract the schema for your database, you can use the following command:
+
+##### CLI
+
+```bash
+
+sqlite3 test.db .schema
+```
+##### Go
+
+```go 
+package main
+
+import (
+    "database/sql"
+    "fmt"
+
+    _ "github.com/mattn/go-sqlite3"
+)
+
+func main() {
+    db, err := sql.Open("sqlite3", "test.db")
+    if err != nil {
+        panic(err)
+    }
+    defer db.Close()
+
+    rows, err := db.Query(`
+        SELECT sql FROM sqlite_master
+        WHERE type='table' AND name='users';
+    `)
+    if err != nil {
+        panic(err)
+    }
+    defer rows.Close()
+
+    var schema string
+    for rows.Next() {
+        err := rows.Scan(&schema)
+        if err != nil {
+            panic(err)
+        }
+    }
+
+    fmt.Println(schema)
+}
+```
