@@ -199,3 +199,106 @@ func main() {
 in this example, the fmt.Fprintf function writes the string "Hello" followed by the body of the request to the response body. The body of the request is a byte slice, so we need to convert it to a string before we can write it to the response body.
 The first argument , *w* is a ResponseWriter, which is used to write the response to the client. The resulting string will be written to the response body.
 
+### The multiplexer
+
+In Go, a multiplexer is a function that takes a request and returns a handler function. The multiplexer is used to determine which handler function to use for a request. The multiplexer is often called a router because it routes requests to the appropriate handler function.
+
+The net/http package provides a function called NewServeMux that returns a multiplexer. The NewServeMux function takes no parameters and returns a multiplexer. We can use the multiplexer to register handler functions for different routes.
+
+```go
+package main
+
+import (
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    mux := http.NewServeMux()
+
+    mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "Hello World!")
+    })
+
+    http.ListenAndServe(":8080", mux)
+}
+```
+
+You can have different multiplexers for different routes. For example, you can have a multiplexer for the /users route and a multiplexer for the /posts route. You can also have a multiplexer for the / route and a multiplexer for the /users route. You can have as many multiplexers as you want.
+
+Although, using just the net/http library can be cumbersome. Third-party developers have developed a library call Chi, which is just a simple routing library for Go
+
+```go
+package main
+
+import (
+    "fmt"
+    "net/http"
+
+    "github.com/go-chi/chi"
+)
+
+func main() {
+    r := chi.NewRouter()
+
+    r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "Hello World!")
+    })
+
+    http.ListenAndServe(":8080", r)
+}
+```
+
+With Chi, you can specify the HTTP method for each route. For example, you can have a GET route for the /users route and a POST route for the /users route. You can also have a GET route for the / route and a POST route for the / route. You can have as many routes as you want.
+
+### Practical Examples
+
+Using our Chi router, let's write a piece of code that receives a request and return a JSON response.
+
+```go
+
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+
+    "github.com/go-chi/chi"
+)
+
+type User struct {
+    Name string `json:"name"`
+    Age  int    `json:"age"`
+}
+
+func main() {
+    r := chi.NewRouter()
+
+    r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+        user := User{
+            Name: "John Doe",
+            Age:  30,
+        }
+
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+
+        json.NewEncoder(w).Encode(user)
+    })
+
+    http.ListenAndServe(":8080", r)
+}
+```
+The `json.NewEncoder(w).Encode(user)` code means that we are encoding the user struct into a JSON object and writing it to the response body.
+
+The response given to the client should be like this :
+
+```json
+{
+    "name": "John Doe",
+    "age": 30
+}
+```
+
+
