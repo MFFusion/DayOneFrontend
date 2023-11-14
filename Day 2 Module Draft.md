@@ -509,3 +509,184 @@ func main() {
     fmt.Println(schema)
 }
 ```
+
+Now let's proceed with some simple CRUD operations with SQLite in Go
+
+### CRUD Operations
+
+#### Creating a record
+
+To create a record in a table, we can use the INSERT INTO statement. The INSERT INTO statement takes two parameters: the name of the table and the values to insert into the table. The values to insert into the table are specified using the VALUES keyword.
+
+```go
+<--! Skipping over some parts -->
+func main() {
+    db, err := sql.Open("sqlite3", "test.db")
+	    if err != nil {
+        panic(err)
+    }
+	    defer db.Close()
+	
+	    _, err = db.Exec(`
+        INSERT INTO users (name, age) VALUES ("John Doe", 30);
+    `)
+		        if err != nil {
+        panic(err)
+    }
+    
+        fmt.Println("Successfully created user!")
+}
+	
+```
+
+#### Reading a record
+
+To read a record from a table, we can use the SELECT statement. The SELECT statement takes two parameters: the columns to select and the table to select from. The columns to select are specified using the SELECT keyword, and the table to select from is specified using the FROM keyword.
+
+```go
+<--! Skipping over some parts -->
+
+func main() {
+    db, err := sql.Open("sqlite3", "test.db")
+        if err != nil {
+        panic(err)
+    }
+        defer db.Close()
+    
+        rows, err := db.Query(`
+        SELECT * FROM users;
+    `)
+                if err != nil {
+        panic(err)
+    }
+    
+        defer rows.Close()
+    
+        var id int
+        var name string
+        var age int
+        for rows.Next() {
+        err := rows.Scan(&id, &name, &age)
+        if err != nil {
+            panic(err)
+        }
+        fmt.Println(id, name, age)
+    }
+}
+```
+
+To properly structure your data for complex operations, consider using a struct to represent your data.
+
+```go
+
+type User struct {
+    ID   int
+    Name string
+    Age  int
+}
+```
+
+We now update our code to use the User struct instead of the individual fields.
+
+```go
+<--! Skipping over some parts -->
+type User struct {
+    ID   int
+    Name string
+    Age  int
+}
+func main(){
+    db, err := sql.Open("sqlite3", "test.db")
+        if err != nil {
+        panic(err)
+    }
+        defer db.Close()
+    
+        rows, err := db.Query(`
+        SELECT * FROM users;
+    `)
+                if err != nil {
+        panic(err)
+    }
+    
+        defer rows.Close()
+        // create a slice of users
+        // slices are like arrays but they can grow and shrink
+        var users []User
+        for rows.Next() {
+        var user User
+        err := rows.Scan(&user.ID, &user.Name, &user.Age)
+        if err != nil {
+            panic(err)
+        }
+        // the append function appends a new element to the end of the slice
+        users = append(users, user)
+    }
+}
+
+
+```
+
+Alternatively, we can use the Scan function to scan the values into a slice of interface{}.
+
+```go
+<--! Skipping over some parts -->
+func main(){
+    db, err := sql.Open("sqlite3", "test.db")
+        if err != nil {
+        panic(err)
+    }
+        defer db.Close()
+    
+        rows, err := db.Query(`
+        SELECT * FROM users;
+    `)
+                if err != nil {
+        panic(err)
+    }
+    
+        defer rows.Close()
+    
+        var users []interface{}
+        for rows.Next() {
+        var user User
+        err := rows.Scan(&user.ID, &user.Name, &user.Age)
+        if err != nil {
+            panic(err)
+        }
+        users = append(users, user)
+    }
+}
+```
+### Updating a record
+
+To update a record in a table, we can use the UPDATE statement. The UPDATE statement takes two parameters: the table to update and the values to update. The values to update are specified using the SET keyword.
+
+```go
+<--! Skipping over some parts -->
+
+rows, err := db.Query(`
+        UPDATE users SET name = "Jane Doe" WHERE id = 1;
+    `)
+                if err != nil {
+        panic(err)
+    }
+```
+
+### Deleting a record
+
+To delete a record from a table, we can use the DELETE statement. The DELETE statement takes one parameter: the table to delete from. The table to delete from is specified using the FROM keyword.
+
+```go
+<--! Skipping over some parts -->
+
+rows, err := db.Query(`
+        DELETE FROM users WHERE id = 1;
+    `)
+                if err != nil {
+        panic(err)
+    }
+```
+
+
+
