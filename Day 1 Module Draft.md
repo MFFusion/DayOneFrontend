@@ -179,10 +179,26 @@ There are two types of list in html, ordered lists and unordered lists. Ordered 
   <li>Tea</li>
   <li>Milk</li>
 </ol>
+### HTML Attributes
+_(I copied this from Mozilla Developer Network)_
+Elements in HTML have **attributes**; these are additional values that configure the elements or adjust their behavior in various ways to meet the criteria the users want.
+
+The most common attributes are :
+
+| Attribute Name<br> | Elements                                                                                   | Description<br>                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| `id`               | Global Attribute                                                                           | Often used with CSS to style a specific element. The value of this attribute must be unique.    |
+| `class`            | Global attribute                                                                           | Often used with CSS to style elements with common properties.                                   |
+| `style`            | Global attribute                                                                           | Defines CSS styles which will override styles previously set.                                   |
+| `hidden`           | Global attribute                                                                           | Prevents rendering of given element, while keeping child elements, e.g. script elements, active |
+| `disabled`         | `<button>`,`<fieldset>`,`<input>`,`<optgroup>`,`<option>`,`<select>`,`<textarea>`          | Indicates whether the user can interact with the element.                                       |
+| `src`              | `<audio>`,`<embed>`,`<iframe>`,`<img>`,`<input>`,`<script>`,`<source>`,`<track>`,`<video>` | The URL of the embeddable content                                                               |
+| `href`             | `<a>`, `<area>`, `<base>`, `<link>`                                                        | The URL of a linked resource.                                                                   |
+
 
 ### Links
 
-Links are defined with the *a* tag. The *href* attribute specifies the URL of the page the link goes to.
+Links are defined with the `<a>` (anchor) tag. The `*href*` attribute specifies the URL of the page the link goes to.
 
 ```html
 
@@ -267,6 +283,10 @@ Standard HTML forms are defined with the *form* tag. The *input* tag defines an 
     <label for="lname">Last name:</label><br>
     <input type="text" id="lname" name="lname">
 </form>
+
+### Events
+
+
 
 ## CSS
 
@@ -421,7 +441,7 @@ Tailwind CSS is a great tool to have in your web development arsenal as it allow
 
 For this workshop, we will be using Tailwind CSS generously. You can learn more about Tailwind CSS at https://tailwindcss.com/
 
-
+## Javascript
 
 # Beginning VueJS
 
