@@ -179,9 +179,13 @@ There are two types of list in html, ordered lists and unordered lists. Ordered 
   <li>Tea</li>
   <li>Milk</li>
 </ol>
+
 ### HTML Attributes
 _(I copied this from Mozilla Developer Network)_
-Elements in HTML have **attributes**; these are additional values that configure the elements or adjust their behavior in various ways to meet the criteria the users want.
+
+Elements in HTML have **attributes** 
+
+These are additional values that configure the elements or adjust their behavior in various ways to meet the criteria the users want.
 
 The most common attributes are :
 
@@ -274,6 +278,7 @@ Standard HTML forms are defined with the *form* tag. The *input* tag defines an 
     <input type="text" id="fname" name="fname"><br>
     <label for="lname">Last name:</label><br>
     <input type="text" id="lname" name="lname">
+    <input type="submit" value="Submit Form">
 </form>
 
 ```
@@ -282,11 +287,69 @@ Standard HTML forms are defined with the *form* tag. The *input* tag defines an 
     <input type="text" id="fname" name="fname"><br>
     <label for="lname">Last name:</label><br>
     <input type="text" id="lname" name="lname">
+    <input type="submit" value="Submit Form">
 </form>
 
 ### Events
 
+Think of events like things that "happen" while your program is running - similar to events in real life. Just like how you might react when your phone rings (the event) by answering it (your response), computer programs can react to different events.
 
+You can program what to do as an event happens.
+
+Here are some common examples:
+
+Mouse events:
+1. Clicking a button
+2. Moving the mouse cursor
+3. Double-clicking
+
+Keyboard events:
+1. Pressing a key
+2. Releasing a key
+3. Typing a character
+
+
+Form events:
+
+1. Submitting a form
+2. Selecting from a dropdown menu
+3. Checking a checkbox
+
+Window events:
+
+1. Loading a webpage
+2. Resizing the browser window
+3. Scrolling up or down
+
+Here's a  table of common HTML events:
+
+| Event | Description | Example Use Case |
+|-------|-------------|-----------------|
+| `onclick` | Triggered when element is clicked | Button click actions |
+| `onsubmit` | Triggered when a form is submitted | Form validation before sending |
+| `onchange` | Triggered when input value changes | Update UI when dropdown selection changes |
+| `onmouseover` | Triggered when mouse hovers over element | Show tooltips or highlight items |
+| `onmouseout` | Triggered when mouse leaves element | Remove highlights or hide tooltips |
+| `onkeydown` | Triggered when keyboard key is pressed | Keyboard shortcuts |
+| `onkeyup` | Triggered when keyboard key is released | Form validation as user types |
+| `onload` | Triggered when page or image finishes loading | Initialize page components |
+| `onfocus` | Triggered when element receives focus | Highlight input field |
+| `onblur` | Triggered when element loses focus | Validate input field |
+| `ondblclick` | Triggered on double click | Open editor or expand item |
+| `oninput` | Triggered immediately when input value changes | Real-time search filtering |
+| `onscroll` | Triggered when scrolling | Infinite scroll or sticky headers |
+| `onresize` | Triggered when window is resized | Responsive layout adjustments |
+| `ondrag` | Triggered when element is dragged | Drag and drop interfaces |
+| `ontouchstart` | Triggered when touch screen is first touched | Mobile interface interactions |
+
+#### Sample implementation in JavaScript
+```html
+<!-- Key events -->
+<input type="text" 
+        placeholder="Press keys here..."
+        onkeydown="document.getElementById('keyPress').textContent = 'Key pressed: ' + event.key">
+<p id="keyPress"></p>
+```
 
 ## CSS
 
@@ -447,18 +510,20 @@ For this workshop, we will be using Tailwind CSS generously. You can learn more 
 
 ## Some short notes
 
-VueJS is a JavaScript \*framework for building Single Page Application for the web. It uses HTML, CSS, JSS and uses both component-based and declarative programming model to build user interfaces. It is a progressive framework, which means that it is both flexible and *incrementally* adoptable. These are the uses for VueJS
+VueJS is a JavaScript framework for building Single Page Application for the web. It uses HTML, CSS, JSS and uses both component-based and declarative programming model to build user interfaces. It is a progressive framework, which means that it is both flexible and *incrementally* adoptable. These are the uses for VueJS:
+
 - Enhancing static HTML without a build step
 - Embedding as Web Components on any page
 - Single-Page Application (SPA)
 - Fullstack / Server-Side Rendering (SSR)
 - Jamstack / Static Site Generation (SSG)
 - Targeting desktop, mobile, WebGL, and even the terminal
-\*A framework is just a structured way of writing JavaScript code. Different frameworks does the same things (which is building interactive web application) differently, with different goals in mind.
+
+A framework is just a structured way of writing JavaScript code. Different frameworks does the same things (which is building interactive web application) differently, with different goals in mind.
 
 ## Before we begin
 
-1) Install NPM, as this will be the only way we will install JS library, frameworks, and packages throughout this workshop
+1) Install NodeJS, as this will be the only way we will install JS library, frameworks, and packages via *NPM* throughout this workshop 
 
 ## Setting up a VueJS project
 
@@ -475,10 +540,10 @@ Vite provides built-in support for server-side rendering (SSR). By default, it l
 
 ### Vite for VueJS
 
-Open *PowerShell* and run the command _npm create vite@latest_ and press ENTER. This should prompt you to setup a name for your project, and select VueJS when the prompt is shown. Afterwards, you may choose TypeScript, or JavaScript (depending on how much you like to suffer). Vite will then create a new folder containg your VueJS project scaffold. Before you start, make sure to run *cd* into the project folder Vite just made and run the command *npm i* to install any missing dependencies for your project.
+Open *PowerShell* and run the command ```npm create vite@latest``` and press ENTER. This should prompt you to setup a name for your project, and select VueJS when the prompt is shown. Afterwards, you may choose TypeScript, or JavaScript (depending on how much you like to suffer). Vite will then create a new folder containg your VueJS project scaffold. Before you start, make sure to run *cd* into the project folder Vite just made and run the command *`npm i`* to install any missing dependencies for your project.
 
-After setting up your VueJS project, you should find folder named *src* and a file named *App.vue*. This is where we will be writing our VueJS code. 
-Open *App.vue* and you should see this code
+After setting up your VueJS project, you should find folder named *src* and a file named *`App.vue`*. This is where we will be writing our VueJS code. 
+Open *`App.vue`* and you should see this code
 
 ```javascript
 <script setup>
@@ -707,7 +772,7 @@ function addTodo() {
 ```
 Here in our *script* section, we have a list of todos, and a todo variable that is used to store the value of the input field. We also have a function named *addTodo* that is used to add the todo to the list of todos. In our *template* section, we have an input field that is bound to the todo variable. We also have a button that is bound to the *addTodo* function. We also have a list that is bound to the list of todos.
 
-The v-model directive is used to bind the value of the input field to the todo variable. The v-for directive is used to loop through the list of todos and display them in the list. As usual, our @click directive is used to bind the button to the *addTodo* function.
+The `v-model` directive is used to bind the value of the input field to the todo variable. The `v-for` directive is used to loop through the list of todos and display them in the list. As usual, our `@click` directive is used to bind the button to the *`addTodo`* function.
 
 ### What are props?
 
@@ -723,7 +788,7 @@ defineProps({
 const count = ref(0)
 </script>
 ```
-This is a variable named *msg* that is initialized to an empty string. This variable is a prop, which means that it is passed from the parent component to the child component. In this case, the parent component is *App.vue* and the child component is *HelloWorld.vue*. We can pass the value of *msg* from *App.vue* to *HelloWorld.vue* like this
+This is a variable named *`msg`* that is initialized to an empty string. This variable is a prop, which means that it is passed from the parent component to the child component. In this case, the parent component is *`App.vue`* and the child component is *`HelloWorld.vue`*. We can pass the value of *`msg`* from *`App.vue`* to *`HelloWorld.vue`* like this
 ```html
 <template>
   <div>
